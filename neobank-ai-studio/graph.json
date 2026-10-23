@@ -1,0 +1,436 @@
+{
+  "nodes": [
+    {
+      "id": "file:app.py",
+      "type": "file",
+      "name": "app.py",
+      "source_system": "python"
+    },
+    {
+      "id": "func:app.py:db_connect",
+      "type": "function",
+      "name": "db_connect",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 34
+      }
+    },
+    {
+      "id": "func:app.py:init_db",
+      "type": "function",
+      "name": "init_db",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 39
+      }
+    },
+    {
+      "id": "func:app.py:utcnow",
+      "type": "function",
+      "name": "utcnow",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 83
+      }
+    },
+    {
+      "id": "func:app.py:audit",
+      "type": "function",
+      "name": "audit",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 86
+      }
+    },
+    {
+      "id": "func:app.py:accounts_df",
+      "type": "function",
+      "name": "accounts_df",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 93
+      }
+    },
+    {
+      "id": "func:app.py:transactions_df",
+      "type": "function",
+      "name": "transactions_df",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 100
+      }
+    },
+    {
+      "id": "func:app.py:log_transaction",
+      "type": "function",
+      "name": "log_transaction",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 109
+      }
+    },
+    {
+      "id": "func:app.py:create_account",
+      "type": "function",
+      "name": "create_account",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 130
+      }
+    },
+    {
+      "id": "func:app.py:make_synthetic_training_data",
+      "type": "function",
+      "name": "make_synthetic_training_data",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 155
+      }
+    },
+    {
+      "id": "func:app.py:train_demo_classifier",
+      "type": "function",
+      "name": "train_demo_classifier",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 179
+      }
+    },
+    {
+      "id": "func:app.py:train_anomaly_model",
+      "type": "function",
+      "name": "train_anomaly_model",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 189
+      }
+    },
+    {
+      "id": "func:app.py:transaction_features",
+      "type": "function",
+      "name": "transaction_features",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 198
+      }
+    },
+    {
+      "id": "func:app.py:get_llm_response",
+      "type": "function",
+      "name": "get_llm_response",
+      "source_system": "python",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 207
+      }
+    },
+    {
+      "id": "table:accounts",
+      "type": "table",
+      "name": "accounts",
+      "source_system": "inferred_from_code",
+      "metadata": {
+        "inferred": true
+      }
+    },
+    {
+      "id": "table:audit_log",
+      "type": "table",
+      "name": "audit_log",
+      "source_system": "inferred_from_code",
+      "metadata": {
+        "inferred": true
+      }
+    },
+    {
+      "id": "table:transactions",
+      "type": "table",
+      "name": "transactions",
+      "source_system": "inferred_from_code",
+      "metadata": {
+        "inferred": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "func:app.py:db_connect",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:34"
+    },
+    {
+      "source": "func:app.py:init_db",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:39"
+    },
+    {
+      "source": "func:app.py:init_db",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "SELECT COUNT(*) FROM accounts",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 39
+      }
+    },
+    {
+      "source": "func:app.py:init_db",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO accounts(name,phone,account_type,balance,created_at) VALUES(?,?,?,?,",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 39
+      }
+    },
+    {
+      "source": "func:app.py:init_db",
+      "target": "table:audit_log",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO audit_log(action,details,created_at) VALUES(?,?,?)",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 39
+      }
+    },
+    {
+      "source": "func:app.py:utcnow",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:83"
+    },
+    {
+      "source": "func:app.py:audit",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:86"
+    },
+    {
+      "source": "func:app.py:audit",
+      "target": "table:audit_log",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO audit_log(action,details,created_at) VALUES(?,?,?)",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 86
+      }
+    },
+    {
+      "source": "func:app.py:accounts_df",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:93"
+    },
+    {
+      "source": "func:app.py:accounts_df",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "SELECT account_id, name, phone, account_type, balance, created_at FROM accounts ",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 93
+      }
+    },
+    {
+      "source": "func:app.py:transactions_df",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:100"
+    },
+    {
+      "source": "func:app.py:transactions_df",
+      "target": "table:transactions",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "SELECT t.transaction_id, t.account_id, a.name, t.kind, t.amount, t.note, t.creat",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 100
+      }
+    },
+    {
+      "source": "func:app.py:transactions_df",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "SELECT t.transaction_id, t.account_id, a.name, t.kind, t.amount, t.note, t.creat",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 100
+      }
+    },
+    {
+      "source": "func:app.py:log_transaction",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:109"
+    },
+    {
+      "source": "func:app.py:log_transaction",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "SELECT balance FROM accounts WHERE account_id=?",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 109
+      }
+    },
+    {
+      "source": "func:app.py:log_transaction",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "UPDATE accounts SET balance=balance+? WHERE account_id=?",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 109
+      }
+    },
+    {
+      "source": "func:app.py:log_transaction",
+      "target": "table:transactions",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO transactions(account_id,kind,amount,note,created_at) VALUES(?,?,?,?,",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 109
+      }
+    },
+    {
+      "source": "func:app.py:log_transaction",
+      "target": "table:audit_log",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO audit_log(action,details,created_at) VALUES(?,?,?)",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 109
+      }
+    },
+    {
+      "source": "func:app.py:create_account",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:130"
+    },
+    {
+      "source": "func:app.py:create_account",
+      "target": "table:accounts",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO accounts(name,phone,account_type,balance,created_at) VALUES(?,?,?,?,",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 130
+      }
+    },
+    {
+      "source": "func:app.py:create_account",
+      "target": "table:transactions",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO transactions(account_id,kind,amount,note,created_at) VALUES(?,?,?,?,",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 130
+      }
+    },
+    {
+      "source": "func:app.py:create_account",
+      "target": "table:audit_log",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "INSERT INTO audit_log(action,details,created_at) VALUES(?,?,?)",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 130
+      }
+    },
+    {
+      "source": "func:app.py:make_synthetic_training_data",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:155"
+    },
+    {
+      "source": "func:app.py:train_demo_classifier",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:179"
+    },
+    {
+      "source": "func:app.py:train_anomaly_model",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:189"
+    },
+    {
+      "source": "func:app.py:transaction_features",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:198"
+    },
+    {
+      "source": "func:app.py:get_llm_response",
+      "target": "file:app.py",
+      "type": "structural_belongs_to",
+      "confidence": 1,
+      "evidence": "in app.py:207"
+    },
+    {
+      "source": "func:app.py:get_llm_response",
+      "target": "table:audit_log",
+      "type": "static_sql_string",
+      "confidence": 0.96,
+      "evidence": "SELECT log_id, action, details, created_at FROM audit_log ORDER BY log_id DESC L",
+      "metadata": {
+        "file": "app.py",
+        "lineno": 207
+      }
+    }
+  ],
+  "metrics": {
+    "total_nodes": 17,
+    "total_edges": 28,
+    "code_to_db": {
+      "total_access_calls": 15,
+      "static_sql_count": 15,
+      "orm_call_count": 0,
+      "dynamic_unresolved_count": 0,
+      "dynamic_unresolved_ratio": 0
+    }
+  }
+}
