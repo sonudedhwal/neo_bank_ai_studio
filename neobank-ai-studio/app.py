@@ -12,6 +12,7 @@ import os
 import json
 import hashlib
 import sqlite3
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -31,10 +32,19 @@ MODEL_PATH = APP_DIR / "fraud_model.joblib"
 st.set_page_config(page_title="NeoBank AI Studio", page_icon="🏦", layout="wide")
 
 # ----------------------------- Persistence -----------------------------
+@contextmanager
 def db_connect():
+    """Open a SQLite connection; commit on success, roll back on error, always close."""
     con = sqlite3.connect(DB_PATH, check_same_thread=False)
     con.row_factory = sqlite3.Row
-    return con
+    try:
+        yield con
+        con.commit()
+    except Exception:
+        con.rollback()
+        raise
+    finally:
+        con.close()
 
 def init_db():
     with db_connect() as con:
@@ -294,7 +304,7 @@ if page == "Overview":
         else:
             st.info("No transactions yet.")
     st.markdown("#### Latest transactions")
-    st.dataframe(tx.head(10), use_container_width=True, hide_index=True)
+    st.dataframe(tx.head(10), width="stretch", hide_index=True)
 
 elif page == "Accounts":
     st.subheader("Account management")
@@ -314,7 +324,7 @@ elif page == "Accounts":
             except Exception as exc:
                 st.error(str(exc))
     with tab2:
-        st.dataframe(accounts, use_container_width=True, hide_index=True)
+        st.dataframe(accounts, width="stretch", hide_index=True)
         if not accounts.empty:
             chosen = st.selectbox("Choose account to view", accounts["account_id"].tolist(), format_func=lambda x: f"ID {x} — {accounts.loc[accounts.account_id == x, 'name'].iloc[0]}")
             row = accounts.loc[accounts.account_id == chosen].iloc[0]
@@ -341,7 +351,7 @@ elif page == "Transactions":
             except Exception as exc:
                 st.error(str(exc))
     st.markdown("#### Transaction history")
-    st.dataframe(tx, use_container_width=True, hide_index=True)
+    st.dataframe(tx, width="stretch", hide_index=True)
 
 elif page == "AI Fraud Lab":
     st.subheader("AI transaction risk lab")
@@ -376,17 +386,26 @@ elif page == "Customer Segmentation":
     if len(accounts) < 3:
         st.info("Create at least three accounts to run a simple demo segmentation.")
     else:
-        features = accounts[["balance"]].copy()
+        features = accounts[["account_id", "balance"]].copy()
         features["transaction_count"] = features["account_id"].map(tx["account_id"].value_counts()).fillna(0)
         scaler = StandardScaler()
-        scaled = scaler.featuresfit_transform(features[["balance", "transaction_count"]])
-        k = st.slider("Number of segments", 2, min(5, len(accounts)), min(3, len(accounts)))
+        scaled = scaler.fit_transform(features[["balance", "transaction_count"]])
+        unique_points = len(features[["balance", "transaction_count"]].drop_duplicates())
+        max_k = min(5, len(accounts), unique_points)
+        if max_k < 2:
+            st.info("All accounts look identical (same balance and activity), so they cannot be split into segments yet.")
+            st.stop()
+        if max_k == 2:
+            k = 2
+            st.caption("Only two distinct customer profiles exist, so 2 segments are used.")
+        else:
+            k = st.slider("Number of segments", 2, max_k, min(3, max_k))
         model = KMeans(n_clusters=k, random_state=42, n_init=10)
         features["segment"] = model.fit_predict(scaled).astype(str)
         result = accounts[["account_id", "name", "account_type", "balance"]].merge(
             features[["account_id", "transaction_count", "segment"]], on="account_id"
         )
-        st.dataframe(result, use_container_width=True, hide_index=True)
+        st.dataframe(result, width="stretch", hide_index=True)
         st.bar_chart(result.groupby("segment")[["balance", "transaction_count"]].mean())
         st.caption("Segments are exploratory groups, not credit ratings or recommendations.")
 
@@ -424,7 +443,7 @@ elif page == "Audit & Export":
     st.subheader("Audit log and data export")
     with db_connect() as con:
         logs = pd.read_sql_query("SELECT log_id, action, details, created_at FROM audit_log ORDER BY log_id DESC LIMIT 1000", con)
-    st.dataframe(logs, use_container_width=True, hide_index=True)
+    st.dataframe(logs, width="stretch", hide_index=True)
     st.download_button("Download accounts CSV", accounts.to_csv(index=False).encode("utf-8"), "neobank_accounts_demo.csv", "text/csv")
     st.download_button("Download transactions CSV", tx.to_csv(index=False).encode("utf-8"), "neobank_transactions_demo.csv", "text/csv")
     st.download_button("Download audit log CSV", logs.to_csv(index=False).encode("utf-8"), "neobank_audit_demo.csv", "text/csv")
